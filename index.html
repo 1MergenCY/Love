@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>我们的专属网站 ❤️</title>
+
+<style>
+body{
+margin:0;
+font-family:"Microsoft YaHei";
+background:black;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+overflow:hidden;
+}
+
+/* 星空 */
+.star{
+position:absolute;
+width:2px;
+height:2px;
+background:white;
+border-radius:50%;
+animation:twinkle 2s infinite;
+z-index:1;
+}
+
+@keyframes twinkle{
+0%,100%{opacity:0.2;}
+50%{opacity:1;}
+}
+
+.card{
+background:rgba(0,0,0,0.85);
+padding:40px;
+border-radius:20px;
+max-width:600px;
+z-index:5;
+text-align:center;
+}
+
+button{
+padding:15px 30px;
+border:none;
+border-radius:30px;
+background:#ff4d6d;
+color:white;
+font-size:18px;
+margin:10px;
+cursor:pointer;
+}
+
+.bigLove{
+font-size:28px;
+font-weight:bold;
+margin-top:20px;
+}
+
+/* 彩蛋文字 */
+.secretText{
+position:fixed;
+width:100%;
+text-align:center;
+top:40%;
+font-size:32px;
+color:#ffd700;
+z-index:9999;
+animation:fade 1s ease;
+}
+
+@keyframes fade{
+from{opacity:0;}
+to{opacity:1;}
+}
+
+/* 烟花 */
+.fire{
+position:fixed;
+width:6px;
+height:6px;
+border-radius:50%;
+animation:boom 1s forwards;
+z-index:9999;
+}
+
+@keyframes boom{
+to{
+transform:translate(var(--x),var(--y));
+opacity:0;
+}
+}
+</style>
+</head>
+
+<body>
+
+<div id="stars"></div>
+
+<div class="card">
+
+<h1>❤️ 致恩慈小姐 ❤️</h1>
+
+<p id="letter"></p>
+
+<div id="anniversary"></div>
+
+<p class="bigLove">
+你愿意做我的情人吗 ❤️
+</p>
+
+<div style="position:relative;height:120px;margin-top:20px;">
+
+<button onclick="yesLove()">我愿意 💖</button>
+<button id="noBtn" style="position:absolute;left:250px;">我不愿意 😝</button>
+
+</div>
+
+</div>
+
+<script>
+
+//////////////// 星空 //////////////////
+for(let i=0;i<120;i++){
+let s=document.createElement("div");
+s.className="star";
+s.style.left=Math.random()*100+"vw";
+s.style.top=Math.random()*100+"vh";
+document.body.appendChild(s);
+}
+
+//////////////// 打字机 //////////////////
+const text=`亲爱的恩慈小姐，
+
+时间荏苒 日月如梭
+我们已经携手走过很多日夜
+
+所以我想为你创造
+一个只属于我们的世界 ❤️`;
+
+let i=0;
+function typing(){
+if(i<text.length){
+document.getElementById("letter").innerHTML+=
+text[i]=="\n"?"<br>":text[i];
+i++;
+setTimeout(typing,50);
+}}
+typing();
+
+//////////////// 纪念日期 //////////////////
+const saved=localStorage.getItem("loveDay");
+if(saved){
+document.getElementById("anniversary").innerHTML=
+"你在 "+saved+" 答应成为我的情人 ❤️";
+}
+
+//////////////// 点击愿意 //////////////////
+function yesLove(){
+
+let today=new Date().toLocaleDateString();
+localStorage.setItem("loveDay",today);
+
+for(let i=0;i<40;i++){
+let f=document.createElement("div");
+f.className="fire";
+f.style.background=`hsl(${Math.random()*360},100%,60%)`;
+f.style.left="50%";
+f.style.top="50%";
+f.style.setProperty("--x",(Math.random()-0.5)*300+"px");
+f.style.setProperty("--y",(Math.random()-0.5)*300+"px");
+document.body.appendChild(f);
+setTimeout(()=>f.remove(),1000);
+}
+
+showText("老婆我爱你 ❤️");
+
+setTimeout(()=>{
+window.location.href="https://1mergency.github.io/Love-album/";
+},2500);
+}
+
+//////////////// 拒绝按钮逃跑 //////////////////
+const noBtn=document.getElementById("noBtn");
+noBtn.addEventListener("mouseover",()=>{
+noBtn.style.left=Math.random()*300+"px";
+noBtn.style.top=Math.random()*80+"px";
+});
+
+//////////////// 彩蛋统一函数 //////////////////
+let textQueue = [];
+let showing = false;
+
+function showText(msg){
+
+textQueue.push(msg);
+
+if(!showing){
+playNext();
+}
+
+}
+
+function playNext(){
+
+if(textQueue.length === 0){
+showing = false;
+return;
+}
+
+showing = true;
+
+let t=document.createElement("div");
+t.className="secretText";
+t.innerText=textQueue.shift();
+
+document.body.appendChild(t);
+
+setTimeout(()=>{
+t.remove();
+playNext();
+},3000);
+
+}
+
+//////////////// 点击流星 //////////////////
+document.body.addEventListener("click",()=>{
+showText("遇见你是我最幸运的奇迹 ❤️");
+});
+
+//////////////// 长按烟花 //////////////////
+let timer;
+document.addEventListener("mousedown",(e)=>{
+timer=setTimeout(()=>fireworks(e.clientX,e.clientY),800);
+});
+document.addEventListener("mouseup",()=>clearTimeout(timer));
+
+function fireworks(x,y){
+for(let i=0;i<50;i++){
+let f=document.createElement("div");
+f.className="fire";
+f.style.background=`hsl(${Math.random()*360},100%,60%)`;
+f.style.left=x+"px";
+f.style.top=y+"px";
+f.style.setProperty("--x",(Math.random()-0.5)*400+"px");
+f.style.setProperty("--y",(Math.random()-0.5)*400+"px");
+document.body.appendChild(f);
+setTimeout(()=>f.remove(),1000);
+}
+
+showText("以后每一年情人节都陪你过 ❤️");
+}
+
+//////////////// 双击玫瑰雨 //////////////////
+document.body.ondblclick=()=>{
+for(let i=0;i<30;i++){
+let r=document.createElement("div");
+r.innerHTML="🌹";
+r.style.position="fixed";
+r.style.left=Math.random()*100+"vw";
+r.style.top="-20px";
+r.style.fontSize="24px";
+r.style.zIndex="9999";
+document.body.appendChild(r);
+
+let fall=setInterval(()=>{
+r.style.top=parseInt(r.style.top)+5+"px";
+if(parseInt(r.style.top)>window.innerHeight){
+r.remove();
+clearInterval(fall);
+}
+},30);
+}
+};
+
+//////////////// 停留30秒 //////////////////
+setTimeout(()=>{
+showText("谢谢你出现在我的生命里 ❤️");
+},30000);
+
+//////////////// 手机摇一摇 //////////////////
+let lastX=null;
+window.addEventListener("devicemotion",(e)=>{
+let x=e.accelerationIncludingGravity.x;
+if(lastX && Math.abs(x-lastX)>15){
+showText("摇到幸福啦 ❤️");
+}
+lastX=x;
+});
+</script>
+
+</body>
+</html>
